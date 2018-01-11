@@ -54,9 +54,6 @@ package a USB recovery device. These instructions assume you are using Linux bas
   git clone https://github.com/96boards-poplar/l-loader.git
   git clone https://github.com/96boards-poplar/u-boot.git
   git clone https://github.com/96boards-poplar/linux.git -b poplar-4.9
-  git clone https://github.com/OP-TEE/optee_os
-  git clone https://github.com/OP-TEE/optee_client
-  git clone https://github.com/OP-TEE/optee_test
 ```
 
 ### Step 5: Set up toolchains for building
@@ -115,34 +112,11 @@ package a USB recovery device. These instructions assume you are using Linux bas
     make CROSS_COMPILE=${CROSS_64}
 ```
 
-### Step 2: Build OP-TEE OS.
-  The result of this process will be a file "tee-pager.bin" that will
-  be incorporated into a FIP file created for ARM Trusted Firmware code.
-
-```shell
-    # This produces one output file, which is used when building ARM
-    # Trusted Firmware, next:
-    #       tee-pager.bin
-    cd ${TOP}/optee_os
-    rm -rf out
-
-    make PLATFORM=poplar CFG_ARM64_core=y CROSS_COMPILE=${CROSS_32} \
-	CROSS_COMPILE_core=${CROSS_64} CROSS_COMPILE_ta_arm64=${CROSS_64} \
-	CROSS_COMPILE_ta_arm32=${CROSS_32} CFG_TEE_CORE_LOG_LEVEL=2
-
-    # If using 1GB board
-    make PLATFORM=poplar CFG_ARM64_core=y CROSS_COMPILE=${CROSS_32} \
-	CROSS_COMPILE_core=${CROSS_64} CROSS_COMPILE_ta_arm64=${CROSS_64} \
-	CROSS_COMPILE_ta_arm32=${CROSS_32} CFG_TEE_CORE_LOG_LEVEL=2 \
-	CFG_DRAM_SIZE_GB=1
-```
-
-### Step 3: Build ARM Trusted Firmware components.
+### Step 2: Build ARM Trusted Firmware components.
   The result of this process will be two files "bl1.bin" and
   "fip.bin", which will be incorporated into the image created for
   "l-loader" in the next step. The FIP file packages files "bl2.bin"
-  and "bl31.bin" (built here) along with "u-boot.bin" and "tee-pager.bin"
-  (built earlier).
+  and "bl31.bin" (built here) along with "u-boot.bin" (built earlier).
 
 ```shell
     # This produces two output files, which are used when building
@@ -151,12 +125,11 @@ package a USB recovery device. These instructions assume you are using Linux bas
     #       build/poplar/debug/fip.bin
     cd ${TOP}/arm-trusted-firmware
     make distclean
-    make CROSS_COMPILE=${CROSS_64} all fip DEBUG=1 PLAT=poplar SPD=opteed \
-	BL33=${TOP}/u-boot/u-boot.bin \
-	BL32=${TOP}/optee_os/out/arm-plat-poplar/core/tee-pager.bin
+    make CROSS_COMPILE=${CROSS_64} all fip DEBUG=1 PLAT=poplar SPD=none \
+	BL33=${TOP}/u-boot/u-boot.bin
 ```
 
-### Step 4: Build "l-loader"
+### Step 3: Build "l-loader"
   This requires the two ARM Trusted Firmware components you built
   earlier.  So start by copying them into the "atf" directory.  Note
   that "l-loader" is a 32-bit executable, so you need to use a
@@ -173,7 +146,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
     make CROSS_COMPILE=${CROSS_32}
 ```
 
-### Step 5: Build Linux.
+### Step 4: Build Linux.
   The result of this process will be two files: "Image" contains the
   kernel image; and "hi3798cv200-poplar.dtb" containing the
   flattened device tree file (device tree binary).  A Linux build is
@@ -193,7 +166,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
     make ARCH=arm64 CROSS_COMPILE="${CROSS_64}" all dtbs modules -j ${JOBCOUNT}
 ```
 
-### Step 6: Gather the required components you built above
+### Step 5: Gather the required components you built above
   First gather the files that will be required to create the Poplar
   USB drive recovery image.  The root file system image should
   already have been placed in the "recovery" directory.
@@ -206,7 +179,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
     cp ${TOP}/linux/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb .
 ```
 
-### Step 7: Build image files used for recovery and installation
+### Step 6: Build image files used for recovery and installation
   You need to supply the root file system image you downloaded
   earlier (whose name may be different from what's shown below).
   This will also require superuser privilege to complete.
@@ -271,7 +244,7 @@ recovery_files/partition3 is not a block special device.
 Proceed anyway? (y,n)
 ```
 
-### Step 8: Copy image files to the TFTP home directory
+### Step 7: Copy image files to the TFTP home directory
   The recovery process depends on transferring files to the Poplar
   board via Ethernet using TFTP.  The "recovery_files" directory
   must be copied to the root of the TFTP directory.
@@ -529,103 +502,3 @@ Proceed anyway? (y,n)
   entirely in memory, so large partitions are broken into pieces.
   Each piece is compressed.  The install script for the partition
   takes care of uncompressing each part before writing it to eMMC.
-
-## Testing OP-TEE
-
-### Step 1: Build OP-TEE client
-
-```shell
-	cd ${TOP}/optee_client
-	rm -rf out
-	make CROSS_COMPILE=${CROSS_64}
-```
-
-### Step 2: Build OP-TEE test
-
-```shell
-	cd ${TOP}/optee_test
-	rm -rf out
-	make CROSS_COMPILE_HOST=${CROSS_64} CROSS_COMPILE_TA=${CROSS_32} \
-	  TA_DEV_KIT_DIR=${TOP}/optee_os/out/arm-plat-poplar/export-ta_arm32 \
-	  OPTEE_CLIENT_EXPORT=${TOP}/optee_client/out/export
-```
-
-### Step 3: Build OP-TEE Debian package
-
-```shell
-	export OPTEE_PKG_VERSION=$(cd ${TOP}/optee_os && git describe)-0
-
-	cd ${TOP}
-	mkdir -p debpkg/optee_${OPTEE_PKG_VERSION}/usr/bin
-	mkdir -p debpkg/optee_${OPTEE_PKG_VERSION}/usr/lib/aarch64-linux-gnu
-	mkdir -p debpkg/optee_${OPTEE_PKG_VERSION}/lib/optee_armtz
-	mkdir -p debpkg/optee_${OPTEE_PKG_VERSION}/DEBIAN
-
-	cd ${TOP}/debpkg/optee_${OPTEE_PKG_VERSION}/usr/bin
-	cp -f ${TOP}/optee_client/out/export/bin/tee-supplicant .
-	cp -f ${TOP}/optee_test/out/xtest/xtest .
-
-	cd ${TOP}/debpkg/optee_${OPTEE_PKG_VERSION}/usr/lib/aarch64-linux-gnu
-	cp -f ${TOP}/optee_client/out/export/lib/libtee* .
-
-	cd ${TOP}/debpkg/optee_${OPTEE_PKG_VERSION}/lib/optee_armtz
-	find ${TOP}/optee_test/out/ta -name "*.ta" -exec cp {} . \;
-
-	cd ${TOP}/debpkg/optee_${OPTEE_PKG_VERSION}/DEBIAN
-	echo "Package: op-tee" > control
-	echo "Version: ${OPTEE_PKG_VERSION}" >> control
-	echo "Section: base" >> control
-	echo "Priority: optional" >> control
-	echo "Architecture: arm64" >> control
-	echo "Depends:" >> control
-	echo "Maintainer: OP-TEE <op-tee@linaro.org>" >> control
-	echo "Description: OP-TEE client binaries, test program and Trusted Applications" >> control
-	echo " Package contains tee-supplicant, libtee.so, xtest and a set of" >> control
-	echo " Trusted Applications." >> control
-	echo " NOTE! This package should only be used for testing and development." >> control
-
-	cd ${TOP}/debpkg
-	dpkg-deb --build optee_${OPTEE_PKG_VERSION}
-	cp -f optee_${OPTEE_PKG_VERSION}.deb ${TOP}/recovery/recovery_files/
-```
-
-### Step 4: Install OP-TEE Debian package
-Boot board to command prompt.
-Run `ifconfig` and note its IP address.
-
-From the PC:
-
-```shell
-	cd ${TOP}/recovery/recovery_files
-	scp optee_${OPTEE_PKG_VERSION}.deb linaro@<poplar_board_ip>:/tmp
-```
-
-From the board:
-
-```shell
-	cd /tmp
-	dpkg --force-all -i optee*.deb
-```
-
-### Step 5. Run OP-TEE test
-From the board:
-
-```shell
-	tee-supplicant &
-	xtest
-```
-
-Towards the end of the test, you should see something like:
-
-```shell
-	+-----------------------------------------------------
-	Result of testsuite regression:
-	regression_1001 OK
-	regression_1002 OK
-	...
-	regression_8002 OK
-	+-----------------------------------------------------
-	15677 subtests of which 0 failed
-	68 test cases of which 0 failed
-	0 test case was skipped
-```
