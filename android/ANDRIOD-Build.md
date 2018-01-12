@@ -25,9 +25,9 @@ git clone https://github.com/96boards-poplar/poplar-kernel.git device/hisilicon/
 3. Download vendor blobs
 
 ```
-wget https://github.com/96boards-poplar/vendor/blob/master/hisilicon-poplar-00001-0c2dc85e.tgz
+wget https://github.com/96boards-poplar/vendor/raw/master/hisilicon-poplar-00001-0c2dc85e.tgz
 tar zxvf hisilicon-poplar-00001-0c2dc85e.tgz
-extract-hisilicon-poplar.sh
+./extract-hisilicon-poplar.sh
 ```
 
 Review the license and type "I ACCEPT". The vendor blobs will be extracted as 'vendor' directory under $ANDROID_BUILD_TOP.
