@@ -41,11 +41,11 @@ make -j8
 
 ## Installing initial bootloader and partition table
 
-see [this](Android-Flash.md#installing-initial-bootloader-and-partition-table)
+see [this](ANDROID-Flash.md#installing-initial-bootloader-and-partition-table)
 
 ## Flashing Android images
 
-see [this](Android-Flash.md#flashing-android-images)
+see [this](ANDROID-Flash.md#flashing-android-images)
 
 
 ## Building the kernel
