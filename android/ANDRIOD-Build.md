@@ -50,7 +50,7 @@ see [this](ANDROID-Flash.md#flashing-android-images)
 
 ## Building the kernel
 
-1. Donwload toolchain.
+1. Download toolchain.
 
 Download a 64-bit GCC 4.9 toolchain from Linaro, and extract
 it under the /opt directory (or anywhere you prefer) on your build system:
@@ -72,7 +72,7 @@ CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linu
 2. Run the following commands:
 
 ```
-git clone https://github.com/96boards-poplar/linux.git linux
+git clone https://github.com/96boards-poplar/linux.git
 cd linux
 make ARCH=arm64 poplar_defconfig
 make ARCH=arm64 CROSS_COMPILE=${CROSS_64} -j8
@@ -82,8 +82,8 @@ make ARCH=arm64 CROSS_COMPILE=${CROSS_64} -j8
 
 ```
 POPLAR_PREBUILT_KERNEL=${ANDROID_BUILD_TOP}/device/hisilicon/poplar-kernel
-cp ./arch/arm64/boot/Image                      ${POPLAR_PREBUILT_KERNEL}/Image
-cp ./arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb   ${POPLAR_PREBUILT_KERNEL}/hi3798cv200-poplar.dtb
+cp ./arch/arm64/boot/Image ${POPLAR_PREBUILT_KERNEL}/Image
+cp ./arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb ${POPLAR_PREBUILT_KERNEL}/hi3798cv200-poplar.dtb
 ```
 
 4. Make the boot image:

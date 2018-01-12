@@ -77,8 +77,8 @@ Now, you have a proper formated USB disk that is ready to be used for flashing t
 1. Download the recovery files and copy them to the USB disk we just created before.
 
 ```
-git clone https://github.com/96boards-poplar/l-loader.git -b u-boot l-loader
-cp l-loader/installer/*  ${your_usb_mount_point}
+git clone https://github.com/96boards-poplar/l-loader.git -b u-boot
+cp -r l-loader/installer/*  ${your_usb_mount_point}
 sync
 ```
 
@@ -90,12 +90,12 @@ Notes: we will use same procedural to flash uefi bootloader.
 
 2. Install the recovery files
 
-Following [instruction here](#put-board-in-recovery-or-flashing-state) to Put board in recovery or flashing state:
+Following [instruction here](#put-board-in-recovery-or-flashing-state) to put board in recovery or flashing state:
 
 ```
 usb reset
-fatload usb 0:1 ${scriptaddr} recovery_files/install.scr;
-source ${scriptaddr};
+fatload usb 0:1 ${scriptaddr} recovery_files/install.scr
+source ${scriptaddr}
 ```
 
 ## Flashing Android images
@@ -103,13 +103,13 @@ source ${scriptaddr};
 1. Install poplar_recovery_builder.sh tool and its [dependencies](https://github.com/96boards-poplar/poplar-tools/blob/master/README.md)
 
 ```
-git clone https://github.com/96boards-poplar/poplar-tools.git poplar-tool
+git clone https://github.com/96boards-poplar/poplar-tools.git
 ```
 
 2. Generate the flash artifact from the Android images
 
 ```
-cd poplar-tool
+cd poplar-tools
 cp $ANDRIOD_IMAGE_OUT/*.img .
 bash poplar_recovery_builder.sh android -a -u
 cp recovery_files/  ${your_usb_mount_point} -r 
@@ -121,8 +121,8 @@ The procedure is the same as you flashing the recovery images.
 
 ```
 usb reset
-fatload usb 0:1 ${scriptaddr} recovery_files/install.scr;
-source ${scriptaddr};
+fatload usb 0:1 ${scriptaddr} recovery_files/install.scr
+source ${scriptaddr}
 env set bootcmd run bootai
 env save
 ```
