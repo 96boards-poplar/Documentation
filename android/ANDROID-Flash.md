@@ -1,5 +1,4 @@
 # Flashing Android to the Poplar Board
-[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)] (http://creativecommons.org/licenses/by-sa/4.0/)
 
 The board currently public available doesn't support USB OTG, so you can't use `fastboot` to flash the board at the moment.
 
@@ -166,3 +165,7 @@ At this point, Android should automatically boot from the eMMC.
 - Power on the Poplar board (while pressing the USB_BOOT button),
   and interrupt its automated boot with a key press.  This should
   lead to a "poplar# " prompt.
+
+## Licence
+
+[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)] (http://creativecommons.org/licenses/by-sa/4.0/)
