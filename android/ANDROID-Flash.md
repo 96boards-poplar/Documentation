@@ -1,16 +1,15 @@
-# Android-Flash.md
+# Flashing Android to the Poplar Board
+[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)] (http://creativecommons.org/licenses/by-sa/4.0/)
 
-The board currently public available doesn't support USB OTG, so you can't use `fastboot` to flash the board at the moment. 
+The board currently public available doesn't support USB OTG, so you can't use `fastboot` to flash the board at the moment.
 
-- [Preparation](#Preparation)
+- [Create a USB drive for flashing](#create-a-USB-drive-for-flashing)
 - [Installing initial bootloader and partition table](#installing-initial-bootloader-and-partition-table)
 - [Flashing Android images](#flashing-android-images)
 
-## Preparation
+## Create a USB drive for flashing
 
-### Proper formated USB flash drive.
-
-To allow recovery of a Poplar board in a "bricked" state, prepare a USB flash drive.
+To allow recovery of a Poplar board in a "bricked" state, or to flash the Poplar board with an Android image,  prepare a USB flash drive.
 
 ### Step 1: Identify your USB flash drive device
 
@@ -70,11 +69,11 @@ To allow recovery of a Poplar board in a "bricked" state, prepare a USB flash dr
     sudo mkfs.fat -F 32 ${USBDISK}1
 ```
 
-Now, you have a proper formated USB disk that is ready to be used for flashing the recovery files and Android Images to the poplar board.
+You now have a properly formated USB drive that is ready to be used for flashing the recovery files and Android Images to a Poplar board.
 
 ## Installing initial bootloader and partition table
 
-1. Download the recovery files and copy them to the USB disk we just created before.
+### Step 1: Download the recovery files and copy them to the USB disk created previously, see [Create a USB drive for flashing](ANDROID-Flash.md#create-a-USB-drive-for-flashing)
 
 ```
 git clone https://github.com/96boards-poplar/l-loader.git -b u-boot
@@ -84,11 +83,7 @@ sync
 
 * An USB automount point on Ubuntu: /media/username/631B-5041
 
-TODO: need to formalize the recovery_file location.
-
-Notes: we will use same procedural to flash uefi bootloader.
-
-2. Install the recovery files
+### Step 2: Install the recovery files
 
 Following [instruction here](#put-board-in-recovery-or-flashing-state) to put board in recovery or flashing state:
 
@@ -100,24 +95,24 @@ source ${scriptaddr}
 
 ## Flashing Android images
 
-1. Install poplar_recovery_builder.sh tool and its [dependencies](https://github.com/96boards-poplar/poplar-tools/blob/master/README.md)
+### Step 1: Install poplar_recovery_builder.sh tool and its [dependencies](https://github.com/96boards-poplar/poplar-tools/blob/master/README.md)
 
 ```
 git clone https://github.com/96boards-poplar/poplar-tools.git
 ```
 
-2. Generate the flash artifact from the Android images
+### Step 2: Generate the flash artifact from the Android images
 
 ```
 cd poplar-tools
 cp $ANDRIOD_IMAGE_OUT/*.img .
 bash poplar_recovery_builder.sh android -a -u
-cp recovery_files/  ${your_usb_mount_point} -r 
+cp recovery_files/  ${your_usb_mount_point} -r
 ```
 
-3. Install the Android Image
+### Step 3: Install the Android Image
 
-The procedure is the same as you flashing the recovery images. 
+The procedure is the same as you flashing the recovery images.
 
 ```
 usb reset

@@ -1,6 +1,8 @@
 # Poplar Android Build
 
-Use the following commands to download, build, and install Android on the Poplar board.
+[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)] (http://creativecommons.org/licenses/by-sa/4.0/)
+
+The following instructions are provided as guidence to download, build, and install Android on the Poplar board.
 
 For general set up, refer to [official Android doc](https://source.android.com/source/initializing).
 
@@ -8,8 +10,8 @@ For general set up, refer to [official Android doc](https://source.android.com/s
 
 1. Get AOSP android-8.0.0_r17
 ```
-mkdir poplar
-cd poplar
+mkdir -p ~/poplar
+cd ~/poplar
 repo init -u https://android.googlesource.com/platform/manifest.git -b android-8.0.0_r17
 repo sync -j8
 ```
@@ -39,18 +41,19 @@ lunch poplar-eng
 make -j8
 ```
 
+
 ## Installing initial bootloader and partition table
 
-see [this](ANDROID-Flash.md#installing-initial-bootloader-and-partition-table)
+see [Installing initial bootloader and partition table](ANDROID-Flash.md#installing-initial-bootloader-and-partition-table)
 
 ## Flashing Android images
 
-see [this](ANDROID-Flash.md#flashing-android-images)
+see [Flashing Android Images](ANDROID-Flash.md#flashing-android-images)
 
 
 ## Building the kernel
 
-1. Download toolchain.
+1. Download the necessary toolchain
 
 Download a 64-bit GCC 4.9 toolchain from Linaro, and extract
 it under the /opt directory (or anywhere you prefer) on your build system:
@@ -69,7 +72,7 @@ And, set up the `CROSS_64` enviroment variable that will be used in building ker
 CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 ```
 
-2. Run the following commands:
+2. Download and build Poplar kernel:
 
 ```
 git clone https://github.com/96boards-poplar/linux.git
@@ -78,7 +81,7 @@ make ARCH=arm64 poplar_defconfig
 make ARCH=arm64 CROSS_COMPILE=${CROSS_64} -j8
 ```
 
-3. Copy output to the poplar prebuild kernel directory
+3. Copy new pre-built kernel and device tree files to the Android tree
 
 ```
 POPLAR_PREBUILT_KERNEL=${ANDROID_BUILD_TOP}/device/hisilicon/poplar-kernel
