@@ -4,9 +4,10 @@ A comprehensive guide to using [Poplar](https://www.96boards.org/product/poplar/
 
 ## Documentation
 
-- [Debian](debian_build_instructions.md)
+- [Debian](debian/)
 
-Describes how to download, build, and install Debian on the Poplar board.
+Describes how to download, build, install and recover Debian on the Poplar
+board.
 
 - [Android](android/)
 
