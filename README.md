@@ -11,3 +11,7 @@ Describes how to download, build, and install Debian on the Poplar board.
 - [Android](android/)
 
 Describes how to download, build, and install Android on the Poplar board.
+
+- [Recovery](recovery.md)
+
+Describes how to do a board recovery on the Poplar board.
