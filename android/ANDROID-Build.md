@@ -24,6 +24,8 @@ git clone https://github.com/96boards-poplar/poplar-kernel.git device/hisilicon/
 
 3. Download vendor blobs
 
+- For public
+
 ```
 wget https://github.com/96boards-poplar/vendor/raw/master/hisilicon-poplar-00001-0c2dc85e.tgz
 tar zxvf hisilicon-poplar-00001-0c2dc85e.tgz
@@ -31,6 +33,12 @@ tar zxvf hisilicon-poplar-00001-0c2dc85e.tgz
 ```
 
 Review the license and type "I ACCEPT". The vendor blobs will be extracted as 'vendor' directory under $ANDROID_BUILD_TOP.
+
+- For internal development (ping bin.chen at linaro.org for repo address)
+
+```
+git clone vendor_dev.git vendor
+```
 
 4. Build
 ```
