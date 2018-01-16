@@ -37,7 +37,7 @@ Review the license and type "I ACCEPT". The vendor blobs will be extracted as 'v
 - For internal development (ping bin.chen at linaro.org for repo address)
 
 ```
-git clone vendor_dev.git vendor
+git clone vendor_dev.git vendor/hisilicon/poplar
 ```
 
 4. Build
