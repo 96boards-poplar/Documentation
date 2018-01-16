@@ -27,8 +27,8 @@ git clone https://github.com/96boards-poplar/poplar-kernel.git device/hisilicon/
 - For public
 
 ```
-wget https://github.com/96boards-poplar/vendor/raw/master/hisilicon-poplar-00001-0c2dc85e.tgz
-tar zxvf hisilicon-poplar-00001-0c2dc85e.tgz
+wget https://github.com/96boards-poplar/vendor/raw/master/hisilicon-poplar-20180116-b2149740.tgz
+tar zxvf hisilicon-poplar-20180116-b2149740.tgz
 ./extract-hisilicon-poplar.sh
 ```
 
