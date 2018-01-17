@@ -72,7 +72,7 @@ You now have a properly formated USB drive that is ready to be used for flashing
 
 ## Installing initial bootloader and partition table
 
-### Step 1: Download the recovery files and copy them to the USB disk created previously, see [Create a USB drive for flashing](ANDROID-Flash.md#create-a-USB-drive-for-flashing)
+### Step 1: Download the recovery files and copy them to the USB disk created previously (see [Create a USB drive for flashing](#create-a-USB-drive-for-flashing))
 
 ```
 git clone https://github.com/96boards-poplar/l-loader.git -b u-boot

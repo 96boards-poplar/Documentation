@@ -2,8 +2,9 @@
 
 [![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-Before trying to build and run OP-TEE on Poplar, please read [instructions](debian_build_instructions.md)
-for general setup of working directory, toolchain and installation.
+Before trying to build and run OP-TEE on Poplar, please read and complete the
+[instructions](debian_build_instructions.md) for general setup of working
+directory, toolchain and installation.
 
 ## Get the source code
 
@@ -15,7 +16,7 @@ git clone https://github.com/OP-TEE/optee_test
 ```
 ## Build OP-TEE OS
 
-The result of this process will be a file "tee-pager.bin" that will
+The result of this process will be a file `tee-pager.bin` that will
 be incorporated into a FIP file created for ARM Trusted Firmware code.
 
 ```shell
@@ -47,6 +48,29 @@ make CROSS_COMPILE=${CROSS_64} all fip DEBUG=1 PLAT=poplar SPD=opteed \
      BL33=${TOP}/u-boot/u-boot.bin \
      BL32=${TOP}/optee_os/out/arm-plat-poplar/core/tee-pager.bin
 ```
+
+## Build "l-loader" with OP-TEE OS included
+
+Follow the instructions in [Step 3: Build "l-loader"](debian_build_instructions.md#step-3-build-l-loader) section of [debian_build_instructions.md](debian_build_instructions.md).
+
+## Build image file with OP-TEE OS
+
+```shell
+cd ${TOP}/recovery
+cp ${TOP}/l-loader/l-loader.bin .
+bash ./poplar_recovery_builder.sh loader
+```
+
+## Copy image file with OP-TEE OS to the TFTP home directory
+
+Follow the instructions in [Step 7: Copy image files to the TFTP home directory](debian_build_instructions.md#step-7-copy-image-files-to-the-tftp-home-directory) section of [debian_build_instructions.md](debian_build_instructions.md).
+
+## Flash image with OP-TEE OS onto the Poplar board eMMC
+
+Follow the instructions in the [Flash images onto the Poplar board eMMC](debian_build_instructions.md#flash-images-onto-the-poplar-board-emmc) section of [debian_build_instructions.md](debian_build_instructions.md).
+
+After `reset`, you should have now booted your Poplar board with an image that
+supports OP-TEE OS.
 
 ## Test OP-TEE
 

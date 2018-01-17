@@ -1,15 +1,15 @@
-# Building Poplar Debian System Recovery Media From Source
+# Building Poplar Debian System Media From Source
 
 [![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-The instructions that follow describe the process for creating a USB
-flash drive suitable for use in recovering a Poplar system from a
-"bricked" state.  The USB memory stick must be at least 2 GB.
+The instructions that follow describe the process for creating image
+files suitable for use in a Poplar system.
 
 ## Gather required sources
 
 First you'll gather the source code and other materials required to
-package a USB recovery device. These instructions assume you are using Linux based OS on your host machine.
+build the images. These instructions assume you are using Linux based
+OS on your host machine.
 
 ### Step 1: Make sure you have needed tools installed
 
@@ -37,7 +37,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
   available under a folder named "latest".  For the purposes of this
   document we assume that build 80 is used.  If you download this
   file by some means other than "wget" shown below, please ensure it
-  gets place in the "recovery" directory created here.
+  gets place in the `recovery` directory created here.
 
 ```shell
     mkdir ${TOP}/recovery
@@ -99,7 +99,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
 ## Build everything
 
 ### Step 1: Build U-Boot.
-  The result of this process will be a file "u-boot.bin" that will
+  The result of this process will be a file `u-boot.bin` that will
   be incorporated into a FIP file created for ARM Trusted Firmware code.
 
 ```shell
@@ -113,10 +113,10 @@ package a USB recovery device. These instructions assume you are using Linux bas
 ```
 
 ### Step 2: Build ARM Trusted Firmware components.
-  The result of this process will be two files "bl1.bin" and
-  "fip.bin", which will be incorporated into the image created for
-  "l-loader" in the next step. The FIP file packages files "bl2.bin"
-  and "bl31.bin" (built here) along with "u-boot.bin" (built earlier).
+  The result of this process will be two files `bl1.bin` and
+  `fip.bin`, which will be incorporated into the image created for
+  `l-loader` in the next step. The FIP file packages files `bl2.bin`
+  and `bl31.bin` (built here) along with `u-boot.bin` (built earlier).
 
 ```shell
     # This produces two output files, which are used when building
@@ -131,13 +131,13 @@ package a USB recovery device. These instructions assume you are using Linux bas
 
 ### Step 3: Build "l-loader"
   This requires the two ARM Trusted Firmware components you built
-  earlier.  So start by copying them into the "atf" directory.  Note
-  that "l-loader" is a 32-bit executable, so you need to use a
+  earlier.  So start by copying them into the `atf` directory.  Note
+  that `l-loader` is a 32-bit executable, so you need to use a
   different tool chain.
 
 ```shell
     # This produces one output file, which is used in building the
-    # USB flash drive:
+    # flash images:
     #       l-loader.bin
     cd ${TOP}/l-loader
     cp ${TOP}/arm-trusted-firmware/build/poplar/debug/bl1.bin atf/
@@ -147,16 +147,16 @@ package a USB recovery device. These instructions assume you are using Linux bas
 ```
 
 ### Step 4: Build Linux.
-  The result of this process will be two files: "Image" contains the
-  kernel image; and "hi3798cv200-poplar.dtb" containing the
+  The result of this process will be two files: `Image` contains the
+  kernel image; and `hi3798cv200-poplar.dtb` containing the
   flattened device tree file (device tree binary).  A Linux build is
-  sped up considerably by running "make" with multiple concurrent
+  sped up considerably by running `make` with multiple concurrent
   jobs.  JOBCOUNT is set below to something reasonable to benefit
   from this.
 
 ```shell
     # This produces two output files, which are used when building
-    # the USB flash drive image:
+    # the flash images:
     #       arch/arm64/boot/Image
     #       arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb
     cd ${TOP}/linux
@@ -168,8 +168,8 @@ package a USB recovery device. These instructions assume you are using Linux bas
 
 ### Step 5: Gather the required components you built above
   First gather the files that will be required to create the Poplar
-  USB drive recovery image.  The root file system image should
-  already have been placed in the "recovery" directory.
+  image files.  The root file system image should already have been
+  placed in the `recovery` directory.
 
 ```shell
     cd ${TOP}/recovery
@@ -179,7 +179,7 @@ package a USB recovery device. These instructions assume you are using Linux bas
     cp ${TOP}/linux/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb .
 ```
 
-### Step 6: Build image files used for recovery and installation
+### Step 6: Build image files used for installation
   You need to supply the root file system image you downloaded
   earlier (whose name may be different from what's shown below).
   This will also require superuser privilege to complete.
@@ -245,8 +245,8 @@ Proceed anyway? (y,n)
 ```
 
 ### Step 7: Copy image files to the TFTP home directory
-  The recovery process depends on transferring files to the Poplar
-  board via Ethernet using TFTP.  The "recovery_files" directory
+  The flashing process depends on transferring files to the Poplar
+  board via Ethernet using TFTP.  The `recovery_files` directory
   must be copied to the root of the TFTP directory.
 
 ```shell
@@ -256,92 +256,8 @@ Proceed anyway? (y,n)
     sudo chown -R tftp.tftp ~tftp/recovery_files
 ```
 
-## To allow recovery of a Poplar board in a "bricked" state, prepare a USB flash drive.
+## Flash images onto the Poplar board eMMC
 
-### Step 1: Identify your USB flash drive device
-
-  Insert the USB flash drive into your host system, and identify
-  your USB device:
-
-```shell
-	grep . /sys/class/block/sd?/device/model
-```
-  If you recognize the model name as your USB flash device, then
-  you know which "sd" device to use.  Here's an example:
-
-```shell
-	/sys/class/block/sdh/device/model:Patriot Memory
-	                 ^^^
-```
-  I had a Patriot Memory USB flash drive, and the device name
-  I'll want is "/dev/sdh" (based on "sdh" above).  Record this name:
-
-```shell
-	USBDISK=/dev/sdh	# Make sure this is *your* device
-```
-
-  The instructions that follow assume your USB flash drive needs to be
-  formatted "from scratch."  Once formatted, all that's required is to
-  copy "fastboot.bin" to the first partition on the drive, and then
-  properly eject the medium before removing the USB drive.
-
-### Step 2: Format the flash drive using MBR partitioning.
-
-  THIS IS VERY IMPORTANT.  The following commands will COMPLETELY
-  ERASE the contents of whatever device you specify here.  So be
-  sure USBDISK defines the flash device you intend to erase.
-
-  You will need superuser access.  First, unmount anything mounted
-  on that device:
-
-```shell
-    sudo umount ${USBDISK}?
-```
-
-  Next, clobber any existing partitioning information that might be
-  found at the beginning of the device:
-
-```shell
-    sudo dd if=/dev/zero of=${USBDISK} bs=2M count=1 status=none
-```
-
-  Create a DOS MBR partition table on the USB flash drive with a
-  single partition, and format that partition using FAT32.
-```shell
-    {   echo label:dos
-	echo 1: start=8 size=62496KiB type=0x0c
-	echo write
-    } | sudo sfdisk --label dos ${USBDISK}
-    sudo mkfs.fat -F 32 ${USBDISK}1
-```
-
-### Step 3: Copy "fastboot.bin" to the drive
-
-  Finally, mount that partition and copy "fastboot.bin" into it.
-  Once the partition has been unmounted and the device has been
-  ejected, the USB stick can be removed.
-
-```shell
-    cd ${TOP}/recovery/recovery_files
-    mkdir -p /tmp/usbdisk
-    sudo mount -t vfat ${USBDISK}1 /tmp/usbdisk
-
-    sudo cp fastboot.bin /tmp/usbdisk
-
-    sudo umount /tmp/usbdisk
-    rmdir /tmp/usbdisk
-    sudo eject ${USBDISK}
-```
-
-  (For a previously-formatted drive, simply inserting it will cause
-  it be mounted automatically--normally under /media/...  somewhere.)
-
-  Remove the USB flash drive from your host system.
-
-## De-brick a Poplar board in a "bricked" state
-
-  If a Poplar board is in a "bricked" state, it can be booted using
-  the USB flash drive prepared above.
 
 ### Step 1: Prepare the Poplar board for power-on
 
@@ -350,36 +266,16 @@ Proceed anyway? (y,n)
   system so you can connect and observe activity on the serial port.
   For me, the board console shows up as /dev/ttyUSB0 when the USB
   cable is connected.  The serial port runs at 115200 baud.  I use
-  this command to see what's on the console:
+  this command to see what is on the console:
 
 ```shell
       screen /dev/ttyUSB0 115200
 ```
 
-### Step 2: Insert the USB flash drive on the Poplar board
+### Step 2: Boot the Poplar board into the u-boot prompt where flashing to eMMC is possible
 
-- There are a total of 4 USB connectors on the Poplar board.  Two
-  are USB 2.0 ports, they're stacked on top of each other.  Insert
-  the USB memory stick into one of these two.
-
-- There is a "USB_BOOT" button on the board.  It is one of two
-  buttons on same side of the boards as the stacked USB 2.0 ports.
-  To boot from the memory stick, this button needs to be depressed
-  at power-on.  You only need to hold it for about a second;
-  keeping it down a bit longer does no harm.
-
-- Next you will be powering on the board, but you need to interrupt
-  the automated boot process.  To do this, be prepared to press a
-  key, perhaps repeatedly, in the serial console window until you
-  find the boot process has stopped.
-
-### Step 2: Boot the Poplar board from the USB flash drive
-
-- Power on the Poplar board (while pressing the USB_BOOT button),
-  and interrupt its automated boot with a key press.  This should
-  lead to a "poplar# " prompt.
-
-## Re-flash images onto the Poplar board eMMC
+- Power on the Poplar board and interrupt its automated boot with a key
+  press.  This should lead to a `poplar# ` prompt.
 
   The files required for partitioning and re-flashing the content of
   eMMC media on the Poplar board were produced earlier, and should
@@ -387,7 +283,7 @@ Proceed anyway? (y,n)
   the Poplar board must be configured, and then an installer script
   will be downloaded and executed.
 
-### Step 1: Configure the Poplar Ethernet interface
+### Step 3: Configure the Poplar Ethernet interface
 
   The following assumes you know your network configuration, and that
   you have an IP address in that network to use for the Poplar board.
@@ -395,9 +291,9 @@ Proceed anyway? (y,n)
 - Inform U-Boot about the network parameters to use.  Use values for
   the following environment variables that are appropriate for your
   network.  The IP address for the Poplar board is assigned with
-  "ipaddr"; the netmask for the network is defined by "netmask"; and
-  the IP address of the TFTP server containing the recovery files
-  (probably your development/build machine) is "serverip".
+  `ipaddr`; the netmask for the network is defined by `netmask`; and
+  the IP address of the TFTP server containing the image files
+  (probably your development/build machine) is `serverip`.
 
   Enter the following commands in the Poplar serial console to
   configure the Ethernet interface.
@@ -412,7 +308,7 @@ Proceed anyway? (y,n)
     ping ${serverip}
 ```
 
-### Step 1: Run the installer
+### Step 4: Run the installer
 
 - Load an install script using TFTP, and run it.
 ```shell
@@ -463,42 +359,3 @@ Proceed anyway? (y,n)
   You have now booted your Poplar board with open source code that you
   have built yourself.
 
-## Additional information about the recovery files
-
-  The following paragraphs provide some more information about the
-  files found in the "recovery_files" directory.
-
-#### fastboot.bin
-  When this file is placed in the first partition of a USB memory
-  stick formatted with a FAT32 file system, that memory stick can
-  be used to boot the Poplar board.  This is useful if the board
-  has become "bricked" and is otherwise unusable.
-
-#### install, install-layout, install-partition1, install-partitionX
-  These are human-readable versions of installer scripts used by
-  U-Boot.  The top-level installer is "install"; it loads and
-  executes the other install scripts.  Each install script has a
-  corresponding ".scr" file (e.g., "install.scr"), which is the file
-  that U-Boot actually uses.  "install-layout" installs the Master
-  Boot Record and the Extended Boot Records required for partitions
-  5 and above.  "install-partitionX" contains commands to install
-  the contents of just one partition.
-
-  Each "install*.scr" file can be loaded into U-Boot and run.  If
-  the top-level "install.scr" is used, it will execute all the
-  others.  Otherwise, partial installs can be performed by, for
-  example, loading and running "install-layout.scr" to re-write the
-  boot records, or "install-partition2.scr" to re-write only
-  partition 2.
-
-#### mbr.bin.gz, ebr5.bin.gz, ebr6.bin.gz
-  These are the Master Boot Record and Extended Boot Records for
-  partitions 5 and 6.  They are compressed.  They are normally
-  loaded and flashed to eMMC using "install-layout".
-
-#### partition1.1-of-1.gz, partition3.1-of-4.gz, etc.
-  These are files that contain (parts of) the contents of the
-  partitions.  The contents of an entire partition can't fit
-  entirely in memory, so large partitions are broken into pieces.
-  Each piece is compressed.  The install script for the partition
-  takes care of uncompressing each part before writing it to eMMC.
