@@ -100,7 +100,3 @@ cp ./arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb ${POPLAR_PREBUILT_KERN
 ```
 make bootimage -j8
 ```
-
-## Licence
-
-[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)] (http://creativecommons.org/licenses/by-sa/4.0/)

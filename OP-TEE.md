@@ -1,7 +1,5 @@
 # Build and Run OP-TEE on Poplar
 
-[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
-
 Before trying to build and run OP-TEE on Poplar, please read [instructions](debian_build_instructions.md)
 for general setup of working directory, toolchain and installation.
 

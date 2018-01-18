@@ -1,7 +1,5 @@
 # Building Poplar Debian System Recovery Media From Source
 
-[![Creative Commons Licence](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
-
 The instructions that follow describe the process for creating a USB
 flash drive suitable for use in recovering a Poplar system from a
 "bricked" state.  The USB memory stick must be at least 2 GB.
