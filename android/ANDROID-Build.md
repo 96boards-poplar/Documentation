@@ -14,7 +14,7 @@ repo init -u https://android.googlesource.com/platform/manifest.git -b android-8
 repo sync -j8
 ```
 
-2. Add poplar device
+2. Add Poplar device and Pre-built 4.9 kernel/dtb
 
 ```
 mkdir device/hisilicon
@@ -81,7 +81,7 @@ CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linu
 2. Download and build Poplar kernel:
 
 ```
-git clone https://github.com/96boards-poplar/linux.git
+git clone -b poplar-android-4.9 https://github.com/96boards-poplar/linux.git
 cd linux
 make ARCH=arm64 poplar_defconfig
 make ARCH=arm64 CROSS_COMPILE=${CROSS_64} -j8
