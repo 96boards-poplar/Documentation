@@ -44,7 +44,7 @@ Add `POPLAR_RECOVERY=1` to the end of the `make` command, as shown below:
 ```
 
 ### Step 2: Build "l-loader" for recovery
-Add `CFLAGS=-DRECOVERY` to the end of the `make` command, as shown below:
+Add `RECOVERY=1` to the end of the `make` command, as shown below:
 
 ```shell
     cp ${TOP}/arm-trusted-firmware/build/poplar/debug/bl1.bin atf/
