@@ -80,9 +80,9 @@ OS on your host machine.
   under the /opt directory on your build system:
 ```shell
     cd /tmp
-    wget https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/arm-linux-gnueabi/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabi.tar.xz
-    sudo tar -C /opt -xJf /tmp/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabi.tar.xz
-    rm /tmp/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabi.tar.xz
+    wget https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/arm-linux-gnueabihf/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabihf.tar.xz
+    sudo tar -C /opt -xJf /tmp/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabihf.tar.xz
+    rm /tmp/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabihf.tar.xz
 ```
 
   Finally, set some environment variables used to specify the path
@@ -90,7 +90,7 @@ OS on your host machine.
   compiler tool chains in the instructions that follow:
 
 ```shell
-    CROSS_32=/opt/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-
+    CROSS_32=/opt/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
     CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 ```
 
