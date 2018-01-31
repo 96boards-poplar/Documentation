@@ -56,24 +56,16 @@ OS on your host machine.
 
 ### Step 5: Set up toolchains for building
   Almost everything uses aarch64, but one item (l-loader.bin) must
-  be built for 32-bit ARM.  In addition, UEFI requires the compiler
-  to be no newer than GCC 4.9.  Finally, the newest versions of GCC
-  warn and in some case treat as errors some things that have not been
-  fixed in code that's not Poplar-specific in the Linux kernel code.
-  The easiest way to avoid problems due to these requirements is to
-  just use the 4.9 version of GCC for 64-bit ARM, and a stable but
-  new version of GCC for 32-bit ARM.  If you already have installed
-  cross-compilers, they may work for you; but the instructions
-  assume you are installing the following toolchains.
+  be built for 32-bit ARM.
 
-  Download a 64-bit toolchain using GCC 4.9 from Linaro, and extract
+  Download a recent 64-bit GCC toolchain from Linaro, and extract
   it under the /opt directory on your build system:
 ```shell
     cd /tmp
-    wget https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/aarch64-linux-gnu/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
+    wget https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/aarch64-linux-gnu/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
     sudo mkdir -p /opt
-    sudo tar -C /opt -xJf /tmp/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
-    rm /tmp/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
+    sudo tar -C /opt -xJf /tmp/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
+    rm /tmp/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
 ```
 
   Download a recent 32-bit GCC toolchain from Linaro, and extract it
@@ -91,7 +83,7 @@ OS on your host machine.
 
 ```shell
     CROSS_32=/opt/gcc-linaro-7.1.1-2017.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-    CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+    CROSS_64=/opt/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 ```
 
 ## Build everything
