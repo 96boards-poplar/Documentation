@@ -47,15 +47,42 @@ lunch poplar-eng
 make -j8
 ```
 
-
 ## Installing initial bootloader and partition table
 
 see [Installing initial bootloader and partition table](ANDROID-Flash.md#installing-initial-bootloader-and-partition-table)
 
 ## Flashing Android images
 
-see [Flashing Android Images](ANDROID-Flash.md#flashing-android-images)
+1. Put board into fastboot mode.
 
+During boot up, interrupt the normal boot flow and get into the the uboot console, type: 
+
+```
+usb reset
+fastboot 0
+
+```
+
+(TODO: this should be replaced by `adb reboot bootloader` command on the host)
+
+2. Flash from the host
+
+Check if device is in fastboot mode using follow command, you should get a fastboot device.
+
+```
+$sudo fastboot devices
+0123456789POPLAR	fastboot
+```
+
+Then, flash using `fastboot flash` command:
+
+```bash
+cd `$OUT`
+sudo fastboot flash mmcsda2 boot.img
+sudo fastboot flash mmcsda3 system.img
+sudo fastboot flash mmcsda5 cache.img
+sudo fastboot flash mmcsda6 userdata.img
+```
 
 ## Building the kernel
 
@@ -100,3 +127,9 @@ cp ./arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb ${POPLAR_PREBUILT_KERN
 ```
 make bootimage -j8
 ```
+
+## Known Issue
+
+1. The boot ROM can't recognize certern type of USB disk, the consequence is you can't use that usb disk for recovery flash. The exactly reason and what type of USB disk can't recognized isn't clear at the moment.
+
+2. No serial output if the device is rebooted by power off and on when both USB2 and MicroUSB are connected at the same time. You have to unplug the USB2 to make sure the board completely lose power before rebooting and then reconnect the USB2 cable. An alternative, actually the recommend way is to reboot the device using software reboot command, that is `reboot` in linux console or `reset` in u-boot console.

@@ -1,10 +1,9 @@
-# Flashing Android to the Poplar Board
+# Recovery Android to the Poplar Board
 
 The board currently public available doesn't support USB OTG, so you can't use `fastboot` to flash the board at the moment.
 
 - [Create a USB drive for flashing](#create-a-USB-drive-for-flashing)
 - [Installing initial bootloader and partition table](#installing-initial-bootloader-and-partition-table)
-- [Flashing Android images](#flashing-android-images)
 
 ## Create a USB drive for flashing
 
@@ -92,38 +91,12 @@ fatload usb 0:1 ${scriptaddr} recovery_files/install.scr
 source ${scriptaddr}
 ```
 
-## Flashing Android images
-
-### Step 1: Install poplar_recovery_builder.sh tool and its [dependencies](https://github.com/96boards-poplar/poplar-tools/blob/master/README.md)
+In addition to that, you also have to setup the correct u-boot bootcmd, so it can auto boot the android once the images are flashed.
 
 ```
-git clone https://github.com/96boards-poplar/poplar-tools.git
-```
-
-### Step 2: Generate the flash artifact from the Android images
-
-```
-cd poplar-tools
-cp $ANDRIOD_IMAGE_OUT/*.img .
-bash poplar_recovery_builder.sh android -a -u
-cp recovery_files/  ${your_usb_mount_point} -r
-```
-
-### Step 3: Install the Android Image
-
-The procedure is the same as you flashing the recovery images.
-
-```
-usb reset
-fatload usb 0:1 ${scriptaddr} recovery_files/install.scr
-source ${scriptaddr}
 env set bootcmd run bootai
 env save
 ```
-
-Reset your Poplar board.  You can reset it in one of three ways: press the reset button; power the board off and on again; or run this command in the serial console window `reset`.
-
-At this point, Android should automatically boot from the eMMC.
 
 ## Put board in recovery or flashing state
 
