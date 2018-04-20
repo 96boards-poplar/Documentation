@@ -80,8 +80,9 @@ Then, flash using `fastboot flash` command:
 cd `$OUT`
 sudo fastboot flash mmcsda2 boot.img
 sudo fastboot flash mmcsda3 system.img
-sudo fastboot flash mmcsda5 cache.img
-sudo fastboot flash mmcsda6 userdata.img
+sudo fastboot flash mmcsda5 vendor.img
+sudo fastboot flash mmcsda6 cache.img
+sudo fastboot flash mmcsda7 userdata.img
 ```
 
 ## Building the kernel
