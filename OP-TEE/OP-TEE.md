@@ -44,7 +44,9 @@ cd ${TOP}/arm-trusted-firmware
 make distclean
 make CROSS_COMPILE=${CROSS_64} all fip DEBUG=1 PLAT=poplar SPD=opteed \
      BL33=${TOP}/u-boot/u-boot.bin \
-     BL32=${TOP}/optee_os/out/arm-plat-poplar/core/tee-pager.bin
+     BL32=${TOP}/optee_os/out/arm-plat-poplar/core/tee-header_v2.bin \
+     BL32_EXTRA1=${TOP}/optee_os/out/arm-plat-poplar/core/tee-pager_v2.bin \
+     BL32_EXTRA2=${TOP}/optee_os/out/arm-plat-poplar/core/tee-pageable_v2.bin
 ```
 
 ## Build "l-loader" with OP-TEE OS included
