@@ -131,6 +131,6 @@ make bootimage -j8
 
 ## Known Issue
 
-1. The boot ROM can't recognize certern type of USB disk, the consequence is you can't use that usb disk for recovery flash. The exactly reason and what type of USB disk can't recognized isn't clear at the moment.
+1. The boot ROM can't recognize certain type of USB disk, the consequence is you can't use that usb disk for recovery flash. The exactly reason and what type of USB disk can't recognized isn't clear at the moment.
 
 2. No serial output if the device is rebooted by power off and on when both USB2 and MicroUSB are connected at the same time. You have to unplug the USB2 to make sure the board completely lose power before rebooting and then reconnect the USB2 cable. An alternative, actually the recommend way is to reboot the device using software reboot command, that is `reboot` in linux console or `reset` in u-boot console.
