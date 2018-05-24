@@ -94,16 +94,16 @@ it under the /opt directory (or anywhere you prefer) on your build system:
 
 ```shell
 cd /tmp
-wget https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/aarch64-linux-gnu/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
+wget https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/aarch64-linux-gnu/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
 sudo mkdir -p /opt
-sudo tar -C /opt -xJf /tmp/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
-rm /tmp/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz
+sudo tar -C /opt -xJf /tmp/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
+rm /tmp/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz
 ```
 
 And, set up the `CROSS_64` enviroment variable that will be used in building kernel below.
 
 ```shell
-CROSS_64=/opt/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
+CROSS_64=/opt/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 ```
 
 2. Download and build Poplar kernel:
