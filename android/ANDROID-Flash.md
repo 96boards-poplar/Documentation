@@ -1,10 +1,5 @@
 # Recovery Android to the Poplar Board
 
-The board currently public available doesn't support USB OTG, so you can't use `fastboot` to flash the board at the moment.
-
-- [Create a USB drive for flashing](#create-a-USB-drive-for-flashing)
-- [Installing initial bootloader and partition table](#installing-initial-bootloader-and-partition-table)
-
 ## Create a USB drive for flashing
 
 To allow recovery of a Poplar board in a "bricked" state, or to flash the Poplar board with an Android image,  prepare a USB flash drive.
@@ -69,19 +64,19 @@ To allow recovery of a Poplar board in a "bricked" state, or to flash the Poplar
 
 You now have a properly formated USB drive that is ready to be used for flashing the recovery files and Android Images to a Poplar board.
 
-## Installing initial bootloader and partition table
+## Installing partition table and bootloader
 
-### Step 1: Download the recovery files and copy them to the USB disk created previously (see [Create a USB drive for flashing](#create-a-USB-drive-for-flashing))
+### Step 1: Download partition table recovery files and copy them to the USB disk created previously (see [Create a USB drive for flashing](#create-a-usb-drive-for-flashing))
 
 ```
-git clone https://github.com/96boards-poplar/l-loader.git -b u-boot
+git clone https://github.com/96boards-poplar/l-loader.git
 cp -r l-loader/installer/*  ${your_usb_mount_point}
 sync
 ```
 
 * An USB automount point on Ubuntu: /media/username/631B-5041
 
-### Step 2: Install the recovery files
+### Step 2: Install partition table
 
 Following [instruction here](#put-board-in-recovery-or-flashing-state) to put board in recovery or flashing state:
 
@@ -91,7 +86,23 @@ fatload usb 0:1 ${scriptaddr} recovery_files/install.scr
 source ${scriptaddr}
 ```
 
-In addition to that, you also have to setup the correct u-boot bootcmd, so it can auto boot the android once the images are flashed.
+### Step 3: Install bootloader
+
+Right after partition table installation, you can choose to install bootloader built from source by yourself, or prebuilt ones in l-loader/prebuilts/, using fastboot.
+
+Device side, U-Boot command:
+
+```
+poplar# fastboot 0
+```
+
+Host side, fastboot command:
+
+```
+$ fastboot flash mmcsda1 loader.bin
+```
+
+In addition to bootloader installation, you also have to setup the correct u-boot bootcmd, so it can auto boot the android once the images are flashed.
 
 ```
 env set bootcmd run bootai

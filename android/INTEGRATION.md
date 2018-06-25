@@ -129,9 +129,9 @@ adb logcat                               >> log_no_audio
 
 ## Misc
 
-### adb
+### ADB over Ethernet
 
-Currently the board doesn't support usb OTG, you will have to use adb over tcp ip, and here are the steps to set it up.
+If for some reason you want to use ADB over Ethernet than USB, here are the steps to set it up.
 
 1. Plug an Ethernet cable to your board and make sure eth0 is getting its address
 

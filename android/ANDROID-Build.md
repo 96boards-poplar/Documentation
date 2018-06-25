@@ -6,11 +6,11 @@ For general set up, refer to [official Android doc](https://source.android.com/s
 
 ## Compiling userspace
 
-1. Get AOSP android-8.0.0_r17
+1. Get AOSP
 ```
 mkdir -p ~/poplar
 cd ~/poplar
-repo init -u https://android.googlesource.com/platform/manifest.git -b android-8.0.0_r17
+repo init -u https://android.googlesource.com/platform/manifest.git -b master
 repo sync -j8
 ```
 
@@ -22,34 +22,16 @@ git clone https://github.com/96boards-poplar/poplar-device.git device/hisilicon/
 git clone https://github.com/96boards-poplar/poplar-kernel.git device/hisilicon/poplar-kernel
 ```
 
-3. Download vendor blobs
-
-- For public
-
-```
-wget https://github.com/96boards-poplar/vendor/raw/master/hisilicon-poplar-20180116-b2149740.tgz
-tar zxvf hisilicon-poplar-20180116-b2149740.tgz
-./extract-hisilicon-poplar.sh
-```
-
-Review the license and type "I ACCEPT". The vendor blobs will be extracted as 'vendor' directory under $ANDROID_BUILD_TOP.
-
-- For internal development (ping bin.chen at linaro.org for repo address)
-
-```
-git clone vendor_dev.git vendor/hisilicon/poplar
-```
-
-4. Build
+3. Build
 ```
 source build/envsetup.sh
 lunch poplar-eng
 make -j8
 ```
 
-## Installing initial bootloader and partition table
+## Installing partition table and bootloader
 
-see [Installing initial bootloader and partition table](ANDROID-Flash.md#installing-initial-bootloader-and-partition-table)
+see [Installing partition table and bootloader](ANDROID-Flash.md#installing-partition-table-and-bootloader)
 
 ## Flashing Android images
 
@@ -62,8 +44,6 @@ usb reset
 fastboot 0
 
 ```
-
-(TODO: this should be replaced by `adb reboot bootloader` command on the host)
 
 2. Flash from the host
 
@@ -89,7 +69,7 @@ sudo fastboot flash mmcsda7 userdata.img
 
 1. Download the necessary toolchain
 
-Download a 64-bit GCC 4.9 toolchain from Linaro, and extract
+Download a 64-bit GCC toolchain from Linaro, and extract
 it under the /opt directory (or anywhere you prefer) on your build system:
 
 ```shell
